@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css"/>
+		<style type="text/css">
+			.has-error{border: 1px solid #ef4437;}
+			#form{margin-top:100px}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<form class="form-horizontal" id="form">
+				<div class="form-group">
+					<label for="username" class="col-sm-2 control-label">用户名</label>
+					<div class="col-lg-4">
+						<input type="text" class="form-control" id="username" placeholder="username" data-verify="username" data-label = "用户名">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="phone" class="col-sm-2 control-label">联系方式</label>
+					<div class="col-lg-4">
+						<input type="text" class="form-control" id="phone" placeholder="phone" data-verify="required mobile" data-label="联系方式">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="password" class="col-sm-2 control-label">密码</label>
+					<div class="col-lg-4">
+						<textarea placeholder="请输入密码" data-verify="required" data-label="密码"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="a" class="col-sm-2 control-label">a</label>
+					<div class="col-lg-4">
+						<input type="text" class="form-control" id="a" placeholder="Password">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="b" class="col-sm-2 control-label">b</label>
+					<div class="col-lg-4">
+						<input type="text" class="form-control" id="b" placeholder="Password3">
+					</div>
+				</div>
+				<a id="submit" href="javascript:;">提交</a>
+			</form>
+		</div>
+		<script type="text/javascript" src="jquery-3.1.1.min.js" ></script>
+		<script src="layer/layer.js"></script>
+		<script src="../jquery-verify.js"></script>
+		<script>
+			var gRules = {
+				"username": {
+					method: function(val){
+						val = $.trim(val);
+						if(val == ""){
+							this.message = "请填写用户名";
+							return false;
+						}
+						
+						if(val.indexOf("@") != -1){
+							this.message = "用户名格式错误";
+							return false;
+						}
+						return true;
+					},
+					message: '用户名格式错误！'
+				},
+				mobile: {
+					method: function(val) {
+						if(!/^1\d{10}$/.test(val)) {
+							return false;
+						}
+						return true;
+					},
+					message:'手机格式错误'
+				}
+			}
+			// 初始化验证器
+			var verify = Validator({
+				formId: '#form', //要验证的表单
+				checkAll: false, //true 一次性验证完整个表单 false逐项验证遇到不通过的就停下
+				oRules: gRules, //验证规则
+				//如果验证不通过 执行函数
+				//el是验证的输入框，msg是错误提示语
+				errorTips: function(el, msg) {  
+					layer.msg(msg);
+					$(el).css('border','1px solid #ef4437')
+				},
+				//如果验证通过 执行函数
+				//el是验证的输入框
+				success: function(el) { 
+					$(el).css('border','1px solid #ccc')
+				}
+			})
+
+			$("#submit").click(function() {
+				var result = verify.check(); //检查表单的验证结果,true or false
+				if(!result) {
+					//如果验证不通过，执行.....
+					return false;
+				}
+				//如果验证通过则 执行....
+			})
+		</script>
+	</body>
+</html>
